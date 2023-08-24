@@ -23,8 +23,12 @@ class ModelsContainer:
     def train_models(self, num_models, X_train, Y_train, validation_data, epochs, batch_size, path, callbacks = None, verbose=0, persist = False, metric_function = None):
         scores = []
         for i in range(num_models):
-            z_train, p_train, Y_train = shuffle(X_train[0], X_train[1], Y_train)
-            X_train = [z_train,p_train]
+
+            if self.category == "EFN":
+                z_train, p_train, Y_train = shuffle(X_train[0], X_train[1], Y_train)
+                X_train = [z_train,p_train]
+            elif self.category == "PFN":
+                X_train, Y_train = shuffle(X_train, Y_train)
             model = EFN_moment(**self.config, summary=False) if self.category == "EFN" else PFN_moment(**self.config, summary=False)
             if callbacks == None:
                 history = model.fit(X_train, Y_train, epochs=epochs, batch_size=batch_size, validation_data = validation_data, verbose=verbose)
