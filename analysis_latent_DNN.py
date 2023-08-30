@@ -17,9 +17,9 @@ print("GPUs Available: ", tf.config.list_physical_devices('GPU'))
 
 
 # Parameters 
-train = 10000
-val = 500
-test = 500
+train = 1000000
+val = 50000
+test = 50000
 k_order = int(sys.argv[1]) 
 run_name = sys.argv[3]
 dataset = sys.argv[2] # either "qg" or "top"
@@ -38,7 +38,7 @@ output_dim = 1
 
 
 # Directory Handling
-base_dir = "" #"/n/home01/rikab/MomentAnalysis/Data"
+base_dir =  "/n/home01/rikab/MomentAnalysis/Data"
 run_dir = os.path.join(base_dir, run_name)
 run_dir = os.path.join(run_dir, f"order_{k_order}")
 model_dir = os.path.join(run_dir, "Models")
@@ -51,7 +51,7 @@ topdir = "/n/holyscratch01/iaifi_lab/rikab/top"
 
 
 
-max_L = 10
+max_L = 128
 F_width = 100
 
 
@@ -99,7 +99,7 @@ def log_features(x):
 
 if dataset == "qg":
     features = []
-    X, Y = qg_jets.load(train+val+test, )
+    X, Y = qg_jets.load(train+val+test, cache_dir="/n/holyscratch01/iaifi_lab/rikab/.energyflow")
     X = X[:,:,:3].astype(np.float32)
     for x in X:
         mask = x[:,0] > 0
