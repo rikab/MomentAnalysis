@@ -16,6 +16,8 @@ print("GPUs Available: ", tf.config.list_physical_devices('GPU'))
 
 
 
+laptop_test = True
+
 # Parameters 
 train = 1000000
 val = 50000
@@ -23,6 +25,11 @@ test = 50000
 k_order = int(sys.argv[1]) 
 run_name = sys.argv[3]
 dataset = sys.argv[2] # either "qg" or "top"
+
+if laptop_test:
+    train = int(train / 100)
+    val = int(val / 100)
+    test = int(test / 100)
 
 
 epochs = 50
@@ -38,7 +45,7 @@ output_dim = 1
 
 
 # Directory Handling
-base_dir =  "/n/home01/rikab/MomentAnalysis/Data"
+base_dir =  "/n/home01/rikab/MomentAnalysis/Data" if not laptop_test else "Data"
 run_dir = os.path.join(base_dir, run_name)
 run_dir = os.path.join(run_dir, f"order_{k_order}")
 model_dir = os.path.join(run_dir, "Models")
@@ -51,7 +58,7 @@ topdir = "/n/holyscratch01/iaifi_lab/rikab/top"
 
 
 
-max_L = 128
+max_L = 128 if not laptop_test else 10
 F_width = 100
 
 
@@ -70,6 +77,8 @@ num_samples = len(Ls)
 # ##########################
 # ########## DATA ##########
 # ##########################
+
+
 
 def log_features(x):
 
@@ -91,7 +100,7 @@ def log_features(x):
 
     l_list = []
 
-    for n in range(128 + 1):
+    for n in range(max_L + 1):
 
         l_list.append(np.sum(zs * np.nan_to_num(np.power(ls, n))))
 
@@ -99,7 +108,8 @@ def log_features(x):
 
 if dataset == "qg":
     features = []
-    X, Y = qg_jets.load(train+val+test, cache_dir="/n/holyscratch01/iaifi_lab/rikab/.energyflow")
+    cache_dir="/n/holyscratch01/iaifi_lab/rikab/.energyflow" if not laptop_test else "~/.energyflow"
+    X, Y = qg_jets.load(train+val+test, cache_dir=cache_dir)
     X = X[:,:,:3].astype(np.float32)
     for x in X:
         mask = x[:,0] > 0
@@ -188,7 +198,7 @@ for order in order_list:
             for sample in range(num_models_to_train):
 
                 model_name = f"DNN_L{L}_3F{F}"
-                model = DNN(input_dim=L+1, dense_sizes=[F,F,F], metrics = [tf.keras.metrics.AUC()], acts='LeakyReLU', output_dim = 1, output_act = "sigmoid")
+                model = DNN(input_dim=L+1, dense_sizes=[F,F,F], metrics = [tf.keras.metrics.AUC()], acts='LeakyReLU', output_dim = 1, output_act = "sigmoid", loss = "binary_crossentropy")
                 print()
                 print(i, order, info, model.count_params())
                 print()
