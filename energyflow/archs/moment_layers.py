@@ -60,14 +60,21 @@ def prepend(lst, string):
 ###########
 # Moment Layer
 #############
+
+@tf.keras.saving.register_keras_serializable()
 class Moment(Layer):
-    def __init__(self, latent_dim, order):
+
+    def __init__(self, latent_dim, order, **kwargs):
+
         super(Moment, self).__init__()
+
+
+
         self.latent_dim = latent_dim
         self.order = order
         initial_id = ['a{}'.format(i) for i in range(latent_dim)]
         itmd_id_list = initial_id
-        self.id_list = initial_id
+        # self.id_list = initial_id
         self.indices = []
         for z in range(self.order -1):
             matrix = ([[1 for x in list(flatten_list(itmd_id_list[i:]))] for i in range(len(itmd_id_list))])
@@ -77,14 +84,18 @@ class Moment(Layer):
             self.indices.append(tmp)
 
             itmd_id_list = [prepend(lst=itmd_id_list[i:],string=initial_id[i]) for i in range(latent_dim)]
-            self.id_list.extend(list(flatten_list(itmd_id_list)))
+            # self.id_list.extend(list(flatten_list(itmd_id_list)))
+
+
+        super(Moment, self).__init__(**kwargs)
+
     def get_config(self):
         config = super().get_config().copy()
         config.update({
             'latent_dim': self.latent_dim,
             'order': self.order,
-            'id_list': self.id_list,
-            'indices' : self.indices
+            # 'id_list': self.id_list,
+            # 'indices' : self.indices
         })
         return config
 
@@ -98,6 +109,8 @@ class Moment(Layer):
         dims = shape(inputs[:,:,0])
         return_tensor = concat([expand_dims(ones(shape= dims), axis=-1)] + return_list,axis=-1)
         return return_tensor
+    
+
 ##########################################
 # Cumulant Layer Class
 ###############################
