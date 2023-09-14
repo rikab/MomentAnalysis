@@ -5,7 +5,6 @@ from abc import abstractmethod, abstractproperty
 import numpy as np
 
 import tensorflow.keras.backend as K
-from tensorflow.keras import __version__ as __keras_version__
 from tensorflow.keras.layers import Dense, Dot, Dropout, Input, Lambda, TimeDistributed
 from tensorflow.keras.models import Model, clone_model
 from tensorflow.keras.regularizers import l2, l1
@@ -35,10 +34,7 @@ __all__ = [
 # Keras 2.2.5 fixes bug in 2.2.4 that affects our usage of the Dot layer
 ################################################################################
 
-if __keras_version__.endswith('-tf'):
-    __keras_version__ = __keras_version__[:-3]
-keras_version_tuple = tuple(map(int, __keras_version__.split('.')))
-DOT_AXIS = 0 if keras_version_tuple <= (2, 2, 4) else 1
+DOT_AXIS = 1
 
 ################################################################################
 # INPUT FUNCTIONS
@@ -672,7 +668,7 @@ class EFN_moment(SymmetricPerParticleNN):
         XY = np.asarray([X, Y]).reshape((1, 2, nx*ny)).transpose((0, 2, 1))
 
         # handle weirdness of Keras/tensorflow
-        old_keras = (keras_version_tuple <= (2, 2, 5))
+        old_keras = False
         s = self.Phi_sizes[-1] if len(self.Phi_sizes) else self.input_dim
         in_t, out_t = self.inputs[1], self._tensors[self._tensor_inds['latent'][0] - 2]
 

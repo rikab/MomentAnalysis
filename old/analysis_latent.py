@@ -167,7 +167,8 @@ for order in order_list:
                                         'Phi_sizes' : [Phi, Phi], 'Phi_acts' : 'ReLU', "Phi_l1_regs" :  0,
                                         'F_sizes' : [F,F,F], 'F_acts': 'ReLU', "F_l1_regs" :  0,
                                         'order' : order , 'architecture_type':'moment',
-                                        'loss': 'categorical_crossentropy','metrics': 'acc','metrics': ['acc', tf.keras.metrics.AUC()]})
+                                        'loss': 'categorical_crossentropy','metrics': 'acc','metrics': ['acc', tf.keras.metrics.AUC()],
+                                        "save_weights_only" : True,})
             print()
             print(i, order, info, container.num_params)
             print()

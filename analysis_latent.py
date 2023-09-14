@@ -111,10 +111,11 @@ for i in range(num_samples):
 
     config = {'Phi_mapping_dim' : [input_dim,L],
                                     'output_dim' : output_dim, 'output_act' : output_act,
-                                    'Phi_sizes' : [Phi, Phi], 'Phi_acts' : 'ReLU', "Phi_l1_regs" :  1e-6,
-                                    'F_sizes' : [F,F,F], 'F_acts': 'ReLU', "F_l1_regs" :  1e-6,
+                                    'Phi_sizes' : [Phi, Phi], 'Phi_acts' : 'LeakyReLU', "Phi_l1_regs" :  1e-6,
+                                    'F_sizes' : [F,F,F], 'F_acts': 'LeakyReLU', "F_l1_regs" :  1e-6,
                                     'order' : k_order , 'architecture_type':'moment',
-                                    'loss': loss,'metrics': 'acc','metrics': ['acc', tf.keras.metrics.AUC()],
+                                    'loss': loss,
+                                    # 'save_weights_only' : True,
                                     }
     configs.append(config)
 
@@ -138,7 +139,7 @@ for config in configs:
         model_filepath = os.path.join(model_dir , model_name)
 
         # Initialize model
-        model = Model(**config, filepath = model_filepath, summary=False)
+        model = Model(**config, filepath = model_filepath, metrics =  ['acc', tf.keras.metrics.AUC()], summary=False)
         callback = tf.keras.callbacks.EarlyStopping(monitor='loss', patience=8)
 
 
