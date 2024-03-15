@@ -53,7 +53,6 @@ def stamp(left_x, top_y,
     # text options
     textops = {'horizontalalignment': 'left',
                'verticalalignment': 'center',
-               'fontsize': 18,
                'transform': ax.transAxes}
     if isinstance(textops_update, dict):
         textops.update(textops_update)
