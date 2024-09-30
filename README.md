@@ -1,6 +1,6 @@
 # Moments Of Clarity
 
-Code to reproduce and make all plots in 2403.08854.
+Code to reproduce and make all plots in [2403.08854](https://arxiv.org/abs/2403.08854).
 
 Includes the ``Moment Pooling'' framework, a generalization of Deep Sets with explicit multiplication.
 
