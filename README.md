@@ -1,6 +1,8 @@
-# MomentAnalysis
+# Moments Of Clarity
 
-Code to reproduce and make all plots in 23XX.XXXX
+Code to reproduce and make all plots in 2403.08854.
+
+Includes the ``Moment Pooling'' framework, a generalization of Deep Sets with explicit multiplication.
 
 All models and weights are saved.
 
